@@ -226,8 +226,8 @@ break *0x00007f27a0371b89
 通过GDB 可以看到r10寄存器内的指针指向的内存地址存储的变量为0 eax寄存器中存储的值同样为0
 ![变量](./pic/variables.png)
 
-通过上图笔者猜测，main函数创建的子线程对num的写操作 主线程并没有观测到，从r10指针 ```0x7f27b7848000``` (num变量的地址) 来看num，
-几次循环下来均为0，是导致主线程不断循环的原因
+通过上图笔者猜测，主线程并没有观测到main函数创建的子线程对num的写操作，从r10指针 ```0x7f27b7848000``` (num变量的地址) 来看num，
+几次循环下来均为0，是导致主线程不断循环的原因占用CPU的原因
 
 * 步骤9 笔者通过GDB 如下设置PC指针跳出循环 验证程序正常退出 如下图
 ```bash 
@@ -237,9 +237,7 @@ set var $pc=0x00007f27a0371b8b
 
 ![exit-normally](./pic/exit-normally.png)
 
-
 * DEMO1小结 死循环的根本原因在于主线程无法观测到子线程对num的更新的值，据笔者推测是多线程缓存可见性的问题
-
 
 * DEMO2 如下图
 
@@ -250,6 +248,6 @@ set var $pc=0x00007f27a0371b8b
 ![local-volatile](pic/lock-volatile.png)
 
 ### 总结
-DEMO2 DEMO3 反汇编后均找到lock指令，基本上可以判断JVM在X64上对原子变量跟volatile都使用了lock的语义，
-根据笔者在Stack Overflow上的一些资料浏览得出结论--lock具有内存栅栏跟缓存invalid的功能，能解决DEMO1(num变量)内存不可见的问题，
+DEMO2 DEMO3 反汇编后均找到lock指令，基本上可以判断JVM在X64机器上对原子变量跟volatile的实现都使用了汇编lock指令的语义，
+根据笔者在Stack Overflow上的一些资料浏览得出结论--lock具有内存栅栏的功能，能解决DEMO1(num变量)内存不可见的问题，
 另外DEMO2 DEMO3均未使用Happen-Before模型。

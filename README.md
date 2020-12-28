@@ -31,13 +31,6 @@
 
 ### 笔者根据问题扩展的3个demo
 
-```text
-笔者的测试环境
-openjdk 11.0.9.1 2020-11-04
-OpenJDK Runtime Environment (build 11.0.9.1+1-Ubuntu-0ubuntu1.20.04)
-OpenJDK 64-Bit Server VM (build 11.0.9.1+1-Ubuntu-0ubuntu1.20.04, mixed mode, sharing)
-```
-
 * DEMO1 死循环
 
 ```java

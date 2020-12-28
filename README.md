@@ -178,7 +178,7 @@ java ThreadNumberDemo
 ```bash
 java -XX:+UnlockDiagnosticVMOptions -XX:+TraceClassLoading -XX:+LogCompilation 
 -XX:LogFile=/tmp/log -XX:+PrintAssembly -XX:PrintAssemblyOptions=intel 
--XX:-BackgroundCompilation -XX:+UnlockDiagnosticVMOptions ThreadNumberDemo4
+-XX:-BackgroundCompilation -XX:+UnlockDiagnosticVMOptions ThreadNumberDemo
 ```
 
 * 步骤5 观察/tmp/log文件 查看反编译生成的文件信息 当看到main函数相关的汇编代码以及注释生成后 执行如下命令

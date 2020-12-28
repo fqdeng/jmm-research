@@ -245,6 +245,6 @@ set var $pc=0x00007f27a0371b8b
 ![local-volatile](pic/lock-volatile.png)
 
 ### 总结
-DEMO2 DEMO3 反汇编后均找到lock指令，基本上可以判断JVM在X64机器上对原子变量跟volatile的实现都使用了汇编lock指令的语义，
-根据笔者在Stack Overflow上的一些资料浏览得出结论--lock具有内存栅栏的功能，能解决DEMO1(num变量)内存不可见的问题，
+DEMO2 DEMO3 反汇编后均找到lock指令，基本上可以判断JVM在X64机器上对原子变量跟volatile的实现都使用了X86汇编语言lock指令的语义，
+根据笔者在Stack Overflow上的一些资料浏览得出结论--lock语义具有内存栅栏的功能，能解决DEMO1(num变量)内存不可见的问题，
 另外DEMO2 DEMO3均未使用Happen-Before模型。

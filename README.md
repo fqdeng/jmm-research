@@ -151,7 +151,8 @@ OpenJDK 64-Bit Server VM (build 11.0.9.1+1-Ubuntu-0ubuntu1.20.04, mixed mode, sh
 > https://juejin.cn/post/6844903656806940686
 > https://github.com/liuzhengyang/hsdis
 
-* 请读者注意，每次Java进程起来后地址都会变化 下面所有的地址都是笔者调试时的地址，读者要根据自己生成的信息 自行更改汇编代码的地址
+* 请读者注意，每次启动的Java进程内存地址都会变化，下面所有的地址都是笔者调试时的地址，
+读者要根据自己生成的信息 自行更改汇编代码的地址
 
 步骤1 编译java文件
 ```bash 

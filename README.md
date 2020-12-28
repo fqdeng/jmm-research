@@ -26,6 +26,11 @@
 
 ## 一个来自技术交流群里的提问
 
+* 问题
+> https://club.perfma.com/question/2079981
+
+### 笔者根据问题扩展的3个demo
+
 ```text
 笔者的测试环境
 openjdk 11.0.9.1 2020-11-04
@@ -34,7 +39,6 @@ OpenJDK 64-Bit Server VM (build 11.0.9.1+1-Ubuntu-0ubuntu1.20.04, mixed mode, sh
 ```
 
 * DEMO1 死循环
-
 
 ```java
 public class ThreadNumberDemo {

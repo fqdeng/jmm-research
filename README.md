@@ -132,6 +132,7 @@ public class ThreadNumberDemo3 {
 
 ## Volatile与原子变量的原理
 
+### 反编译与调试
 * 笔者凭着好奇心决定尝试反编译看看源码
 
 笔者的Linux跟JDK环境
@@ -154,25 +155,24 @@ OpenJDK 64-Bit Server VM (build 11.0.9.1+1-Ubuntu-0ubuntu1.20.04, mixed mode, sh
 * 请读者注意，每次启动的Java进程内存地址都会变化，下面所有的地址都是笔者调试时的地址，
 读者要根据自己生成的信息 自行更改汇编代码的地址
 
-步骤1 编译java文件
+* 步骤1 编译java文件
 ```bash 
 javac ThreadNumberDemo.java
 ```
 得到ThreadNumberDemo.class文件
 
-步骤2 执行如下命令
+* 步骤2 执行如下命令
 ```bash
 java ThreadNumberDemo
 ```
 
-步骤3 观察
+* 步骤3 观察
 ![程序的显示](./pic/demo1-running.png)
 
 此时程序并未退出，如下图中 占用笔者大量CPU资源
 ![程序的CPU消耗](./pic/demo1-htop.png)
 
-步骤4 使用反编译插件 + GDB调试
-
+* 步骤4 使用反编译插件 + GDB调试
 退出刚才的Java进程，执行如下命令
 
 ```bash
@@ -181,15 +181,14 @@ java -XX:+UnlockDiagnosticVMOptions -XX:+TraceClassLoading -XX:+LogCompilation
 -XX:-BackgroundCompilation -XX:+UnlockDiagnosticVMOptions ThreadNumberDemo4
 ```
 
-步骤5 观察/tmp/log文件 查看反编译生成的文件信息 当看到main函数相关的汇编代码以及注释生成后 执行如下命令
+* 步骤5 观察/tmp/log文件 查看反编译生成的文件信息 当看到main函数相关的汇编代码以及注释生成后 执行如下命令
 
 ```bash
 sudo gdb -p {pid}
 ```
-
 上面的{pid} 请读者以自己机器上运行的Java进程pid为准，笔者这里前面展示的图片中有两个Java进程的pid，读者可以分别用gdb attach上去尝试调试
 
-步骤6 附加后 查看/tmp/log 以及Java源文件
+* 步骤6 附加后 查看/tmp/log 以及Java源文件
 
 ![全局查看](./pic/demo-line-18.png)
 
@@ -202,7 +201,7 @@ GDB 执行
 set disassembly-flavor intel
 ```
 
-步骤7 反编译对比 /tmp/log
+* 步骤7 反编译对比 /tmp/log
 
 GDB 执行
 ```bash 
@@ -212,7 +211,7 @@ disass 0x00007f27a0371b7f,0x00007f27a0371b89
 
 ![反编译对比](./pic/gdb-compare.png)
 
-步骤8 设置breakpoint 跟进代码
+* 步骤8 设置breakpoint 跟进代码
 
 ```bash
 break *0x00007f27a0371b7f
@@ -230,7 +229,7 @@ break *0x00007f27a0371b89
 通过上图笔者猜测，main函数创建的子线程对num的写操作 主线程并没有观测到，从r10指针 ```0x7f27b7848000``` (num变量的地址) 来看num，
 几次循环下来均为0，是导致主线程不断循环的原因
 
-步骤9 笔者通过GDB 如下设置PC指针跳出循环 验证程序正常退出 如下图
+* 步骤9 笔者通过GDB 如下设置PC指针跳出循环 验证程序正常退出 如下图
 ```bash 
 set var $pc=0x00007f27a0371b8b
 ```
@@ -250,6 +249,7 @@ set var $pc=0x00007f27a0371b8b
 
 ![local-volatile](pic/lock-volatile.png)
 
+### 总结
 DEMO2 DEMO3 反汇编后均找到lock指令，基本上可以判断JVM在X64上对原子变量跟volatile都使用了lock的语义，
 根据笔者在Stack Overflow上的一些资料浏览得出结论--lock具有内存栅栏跟缓存invalid的功能，能解决DEMO1(num变量)内存不可见的问题，
 另外DEMO2 DEMO3均未使用Happen-Before模型。
